@@ -11,7 +11,8 @@ import (
 func PasswordFrom(host, user string, r io.Reader) (string, error) {
 	hp := strings.SplitN(host, ":", 2) // split to hostname:port
 	if len(hp) == 1 {
-		hp = append(hp, "")
+		// Add default postgresql port
+		hp = append(hp, "5432")
 	}
 
 	er := NewEntryReader(r)

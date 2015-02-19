@@ -19,6 +19,7 @@ localhost:*:db:*:buddy
 		host, user, pass string
 	}{
 		{"localhost:5432", "root", "god123"},
+		{"localhost", "root", "god123"},
 		{"localhost:5000", "root", "god5000"},
 		{"localhost:1000", "root", "god1000"},
 		{"localhost:123", "root", "local_god"},
