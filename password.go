@@ -1,4 +1,3 @@
-// Package pgpass allows for reading passwords from pgpass file.
 package pgpass
 
 import (
