@@ -2,6 +2,7 @@ package pgpass
 
 import (
 	"io"
+	"net/url"
 	"strings"
 )
 
@@ -37,4 +38,27 @@ func Password(host, user string) (string, error) {
 	}
 	defer f.Close()
 	return PasswordFrom(host, user, f)
+}
+
+// UpdateURL injects password into URL if not already provided.
+// Password will be loaded from the default pgpass file.
+func UpdateURL(dburl string) (string, error) {
+	u, err := url.Parse(dburl)
+	if err != nil {
+		return "", err
+	}
+	if user := u.User; user != nil {
+		if _, ok := user.Password(); !ok {
+			uname := user.Username()
+			pass, err := Password(u.Host, uname)
+			if err != nil {
+				return "", err
+			}
+			if pass != "" {
+				u.User = url.UserPassword(uname, pass)
+			}
+		}
+	}
+
+	return u.String(), nil
 }
