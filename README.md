@@ -6,7 +6,8 @@ This libarary will allow you to iterate all the entries in pgpass file as well a
 When applicable, the default pgpass file being used is read from `~/.pgpass` location.
 This is not going to work on Windows, I uderstand, but I don't own one and cannot test. Appropriate patch reading from `%APPDATA%\postgresql\pgpass.conf` should be quite trivial though.
 
-## Example
+## Examples
+### Get password
 ```go
 // Input:
 // localhost:5432:db:tg:letmein
@@ -36,3 +37,24 @@ func main() {
 // trustno1
 // superman
 ```
+### Inject password into an URL
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/tg/pgpass"
+)
+
+func main() {
+	u, _ := pgpass.UpdateURL("postgres://tg@localhost:5432/db?sslmode=disable")
+	fmt.Println(u) // postgres://tg:letmein@localhost:5432/db?sslmode=disable
+	// Now you can call sql.Open("postgres", u)
+}
+```
+## Why?
+Because my password is in `~/.pgpass` already, for use with `psql`.
+Because I don't want to duplicate it in the config file for each process.
+Because someone will send the config file to his mum by email one day,
+or store it in github.
